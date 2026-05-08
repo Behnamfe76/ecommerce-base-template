@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { format, isToday } from 'date-fns'
+import { isToday } from 'date-fns'
 import type { Mail } from '~/types'
 
 const props = defineProps<{
@@ -9,6 +9,7 @@ const props = defineProps<{
 const mailsRefs = ref<Record<number, Element | null>>({})
 
 const selectedMail = defineModel<Mail | null>()
+const { formatDate } = useLocaleFormatters()
 
 watch(selectedMail, () => {
   if (!selectedMail.value) {
@@ -50,7 +51,7 @@ defineShortcuts({
       :ref="(el) => { mailsRefs[mail.id] = el as Element | null }"
     >
       <div
-        class="p-4 sm:px-6 text-sm cursor-pointer border-l-2 transition-colors"
+        class="p-4 sm:px-6 text-sm cursor-pointer border-s-2 transition-colors"
         :class="[
           mail.unread ? 'text-highlighted' : 'text-toned',
           selectedMail && selectedMail.id === mail.id
@@ -66,7 +67,7 @@ defineShortcuts({
             <UChip v-if="mail.unread" />
           </div>
 
-          <span>{{ isToday(new Date(mail.date)) ? format(new Date(mail.date), 'HH:mm') : format(new Date(mail.date), 'dd MMM') }}</span>
+          <span>{{ isToday(new Date(mail.date)) ? formatDate(mail.date, { hour: '2-digit', minute: '2-digit', hour12: false }) : formatDate(mail.date, { day: 'numeric', month: 'short' }) }}</span>
         </div>
         <p class="truncate" :class="[mail.unread && 'font-semibold']">
           {{ mail.subject }}

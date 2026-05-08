@@ -2,6 +2,8 @@
 import * as z from 'zod'
 import type { FormError } from '@nuxt/ui'
 
+const { t } = useAppLocale()
+
 const passwordSchema = z.object({
   current: z.string().min(8, 'Must be at least 8 characters'),
   new: z.string().min(8, 'Must be at least 8 characters')
@@ -25,8 +27,8 @@ const validate = (state: Partial<PasswordSchema>): FormError[] => {
 
 <template>
   <UPageCard
-    title="Password"
-    description="Confirm your current password before setting a new one."
+    :title="t('settings.password')"
+    :description="t('settings.passwordDescription')"
     variant="subtle"
   >
     <UForm
@@ -39,7 +41,7 @@ const validate = (state: Partial<PasswordSchema>): FormError[] => {
         <UInput
           v-model="password.current"
           type="password"
-          placeholder="Current password"
+          :placeholder="t('settings.currentPassword')"
           class="w-full"
         />
       </UFormField>
@@ -48,22 +50,22 @@ const validate = (state: Partial<PasswordSchema>): FormError[] => {
         <UInput
           v-model="password.new"
           type="password"
-          placeholder="New password"
+          :placeholder="t('settings.newPassword')"
           class="w-full"
         />
       </UFormField>
 
-      <UButton label="Update" class="w-fit" type="submit" />
+      <UButton :label="t('common.update')" class="w-fit" type="submit" />
     </UForm>
   </UPageCard>
 
   <UPageCard
-    title="Account"
-    description="No longer want to use our service? You can delete your account here. This action is not reversible. All information related to this account will be deleted permanently."
+    :title="t('settings.account')"
+    :description="t('settings.accountDescription')"
     class="bg-linear-to-tl from-error/10 from-5% to-default"
   >
     <template #footer>
-      <UButton label="Delete account" color="error" />
+      <UButton :label="t('settings.deleteAccount')" color="error" />
     </template>
   </UPageCard>
 </template>

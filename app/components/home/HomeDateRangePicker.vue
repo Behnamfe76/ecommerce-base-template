@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import { DateFormatter, getLocalTimeZone, CalendarDate, today } from '@internationalized/date'
+import { getLocalTimeZone, CalendarDate, today } from '@internationalized/date'
 import type { Range } from '~/types'
 
-const df = new DateFormatter('en-US', {
-  dateStyle: 'medium'
-})
+const { t } = useAppLocale()
+const { language, formatDate } = useLocaleFormatters()
 
 const selected = defineModel<Range>({ required: true })
 
-const ranges = [
-  { label: 'Last 7 days', days: 7 },
-  { label: 'Last 14 days', days: 14 },
-  { label: 'Last 30 days', days: 30 },
-  { label: 'Last 3 months', months: 3 },
-  { label: 'Last 6 months', months: 6 },
-  { label: 'Last year', years: 1 }
-]
+const ranges = computed(() => [
+  { label: t('home.last7Days'), days: 7 },
+  { label: t('home.last14Days'), days: 14 },
+  { label: t('home.last30Days'), days: 30 },
+  { label: t('home.last3Months'), months: 3 },
+  { label: t('home.last6Months'), months: 6 },
+  { label: t('home.lastYear'), years: 1 }
+])
 
 const toCalendarDate = (date: Date) => {
   return new CalendarDate(
@@ -88,14 +87,14 @@ const selectRange = (range: { days?: number, months?: number, years?: number }) 
       <span class="truncate">
         <template v-if="selected.start">
           <template v-if="selected.end">
-            {{ df.format(selected.start) }} - {{ df.format(selected.end) }}
+            {{ formatDate(selected.start, { dateStyle: 'medium' }) }} - {{ formatDate(selected.end, { dateStyle: 'medium' }) }}
           </template>
           <template v-else>
-            {{ df.format(selected.start) }}
+            {{ formatDate(selected.start, { dateStyle: 'medium' }) }}
           </template>
         </template>
         <template v-else>
-          Pick a date
+          {{ t('home.pickDate') }}
         </template>
       </span>
 
@@ -123,6 +122,7 @@ const selectRange = (range: { days?: number, months?: number, years?: number }) 
         <UCalendar
           v-model="calendarRange"
           class="p-2"
+          :locale="language"
           :number-of-months="2"
           range
         />

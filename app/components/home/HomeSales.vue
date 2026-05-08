@@ -7,6 +7,8 @@ const props = defineProps<{
   period: Period
   range: Range
 }>()
+const { t } = useAppLocale()
+const { formatCurrency, formatDate } = useLocaleFormatters()
 
 const UBadge = resolveComponent('UBadge')
 
@@ -44,14 +46,14 @@ const { data } = await useAsyncData('sales', async () => {
 const columns: TableColumn<Sale>[] = [
   {
     accessorKey: 'id',
-    header: 'ID',
+    header: t('sales.id'),
     cell: ({ row }) => `#${row.getValue('id')}`
   },
   {
     accessorKey: 'date',
-    header: 'Date',
+    header: t('sales.date'),
     cell: ({ row }) => {
-      return new Date(row.getValue('date')).toLocaleString('en-US', {
+      return formatDate(row.getValue('date') as string, {
         day: 'numeric',
         month: 'short',
         hour: '2-digit',
@@ -62,35 +64,30 @@ const columns: TableColumn<Sale>[] = [
   },
   {
     accessorKey: 'status',
-    header: 'Status',
+    header: t('sales.status'),
     cell: ({ row }) => {
+      const status = row.getValue('status') as string
       const color = {
         paid: 'success' as const,
         failed: 'error' as const,
         refunded: 'neutral' as const
-      }[row.getValue('status') as string]
+      }[status]
 
       return h(UBadge, { class: 'capitalize', variant: 'subtle', color }, () =>
-        row.getValue('status')
+        t(`sales.${status}`)
       )
     }
   },
   {
     accessorKey: 'email',
-    header: 'Email'
+    header: t('customers.email')
   },
   {
     accessorKey: 'amount',
-    header: () => h('div', { class: 'text-right' }, 'Amount'),
+    header: () => h('div', { class: 'text-end' }, t('sales.amount')),
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue('amount'))
-
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'EUR'
-      }).format(amount)
-
-      return h('div', { class: 'text-right font-medium' }, formatted)
+      return h('div', { class: 'text-end font-medium' }, formatCurrency(amount, 'EUR', { maximumFractionDigits: 2 }))
     }
   }
 ]
@@ -105,7 +102,7 @@ const columns: TableColumn<Sale>[] = [
       base: 'table-fixed border-separate border-spacing-0',
       thead: '[&>tr]:bg-elevated/50 [&>tr]:after:content-none',
       tbody: '[&>tr]:last:[&>td]:border-b-0',
-      th: 'first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
+      th: 'first:rounded-s-lg last:rounded-e-lg border-y border-default first:border-s last:border-e',
       td: 'border-b border-default'
     }"
   />

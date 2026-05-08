@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { formatTimeAgo } from '@vueuse/core'
 import type { Notification } from '~/types'
 
 const { isNotificationsSlideoverOpen } = useDashboard()
+const { t } = useAppLocale()
+const { formatRelativeTimeFromNow } = useLocaleFormatters()
 
 const { data: notifications } = await useFetch<Notification[]>('/api/notifications')
 </script>
@@ -10,7 +11,7 @@ const { data: notifications } = await useFetch<Notification[]>('/api/notificatio
 <template>
   <USlideover
     v-model:open="isNotificationsSlideoverOpen"
-    title="Notifications"
+    :title="t('notifications.title')"
   >
     <template #body>
       <NuxtLink
@@ -38,7 +39,7 @@ const { data: notifications } = await useFetch<Notification[]>('/api/notificatio
             <time
               :datetime="notification.date"
               class="text-muted text-xs"
-              v-text="formatTimeAgo(new Date(notification.date))"
+              v-text="formatRelativeTimeFromNow(notification.date)"
             />
           </p>
 

@@ -3,14 +3,16 @@ import { computed, ref, watch } from 'vue'
 import { breakpointsTailwind } from '@vueuse/core'
 import type { Mail } from '~/types'
 
-const tabItems = [{
-  label: 'All',
+const { t } = useAppLocale()
+const selectedTab = ref('all')
+
+const localizedTabItems = computed(() => [{
+  label: t('inbox.all'),
   value: 'all'
 }, {
-  label: 'Unread',
+  label: t('inbox.unread'),
   value: 'unread'
-}]
-const selectedTab = ref('all')
+}])
 
 const { data: mails } = await useFetch<Mail[]>('/api/mails', { default: () => [] })
 
@@ -55,7 +57,7 @@ const isMobile = breakpoints.smaller('lg')
     :max-size="30"
     resizable
   >
-    <UDashboardNavbar title="Inbox">
+    <UDashboardNavbar :title="t('inbox.title')">
       <template #leading>
         <UDashboardSidebarCollapse />
       </template>
@@ -66,7 +68,7 @@ const isMobile = breakpoints.smaller('lg')
       <template #right>
         <UTabs
           v-model="selectedTab"
-          :items="tabItems"
+          :items="localizedTabItems"
           :content="false"
           size="xs"
         />

@@ -52,17 +52,30 @@ export default defineNuxtConfig({
     // if you feel overwhelmed by logs, you can disable some features and fix things step by step.
     features: {
       // Defaults to true for each feature
-      hydration: true,
-    },
+      hydration: true
+    }
   },
 
   i18n: {
+    strategy: 'no_prefix',
+    langDir: 'locales',
     defaultLocale: 'en',
+    detectBrowserLanguage: false,
+    vueI18n: './i18n.config.ts',
     locales: [
       {
         code: 'en',
+        dir: 'ltr',
+        file: 'en.ts',
         language: 'en-US',
         name: 'English'
+      },
+      {
+        code: 'fa',
+        dir: 'rtl',
+        file: 'fa.ts',
+        language: 'fa-IR',
+        name: 'فارسی'
       }
     ]
   }

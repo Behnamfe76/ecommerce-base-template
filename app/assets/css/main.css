@@ -1,6 +1,12 @@
 @import "tailwindcss" theme(static);
 @import "@nuxt/ui";
 
+@font-face {
+  font-family: "iran-yekan";
+  src: url(../fonts/iranyekanwebregular-fanum.woff2) format("woff2");
+}
+
+
 @theme static {
   --font-sans: 'Public Sans', sans-serif;
 
@@ -15,4 +21,12 @@
   --color-green-800: #016538;
   --color-green-900: #0A5331;
   --color-green-950: #052E16;
+}
+
+:root[dir="rtl"] {
+  --font-sans: 'iran-yekan', 'Noto Sans Arabic', Tahoma, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
 }

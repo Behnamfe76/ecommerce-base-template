@@ -2,6 +2,7 @@
 import type { Member } from '~/types'
 
 const { data: members } = await useFetch<Member[]>('/api/members', { default: () => [] })
+const { t } = useAppLocale()
 
 const q = ref('')
 
@@ -15,14 +16,14 @@ const filteredMembers = computed(() => {
 <template>
   <div>
     <UPageCard
-      title="Members"
-      description="Invite new members by email address."
+      :title="t('settings.members')"
+      :description="t('settings.membersDescription')"
       variant="naked"
       orientation="horizontal"
       class="mb-4"
     >
       <UButton
-        label="Invite people"
+        :label="t('settings.invitePeople')"
         color="neutral"
         class="w-fit lg:ms-auto"
       />
@@ -33,7 +34,7 @@ const filteredMembers = computed(() => {
         <UInput
           v-model="q"
           icon="i-lucide-search"
-          placeholder="Search members"
+          :placeholder="t('settings.searchMembers')"
           autofocus
           class="w-full"
         />

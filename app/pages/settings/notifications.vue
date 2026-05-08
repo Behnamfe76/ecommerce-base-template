@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useAppLocale()
+
 const state = reactive<{ [key: string]: boolean }>({
   email: true,
   desktop: false,
@@ -7,35 +9,35 @@ const state = reactive<{ [key: string]: boolean }>({
   important_updates: true
 })
 
-const sections = [{
-  title: 'Notification channels',
-  description: 'Where can we notify you?',
+const sections = computed(() => [{
+  title: t('settings.notificationChannels'),
+  description: t('settings.notificationChannelsDescription'),
   fields: [{
     name: 'email',
-    label: 'Email',
-    description: 'Receive a daily email digest.'
+    label: t('settings.channelEmail'),
+    description: t('settings.channelEmailDescription')
   }, {
     name: 'desktop',
-    label: 'Desktop',
-    description: 'Receive desktop notifications.'
+    label: t('settings.channelDesktop'),
+    description: t('settings.channelDesktopDescription')
   }]
 }, {
-  title: 'Account updates',
-  description: 'Receive updates about Nuxt UI.',
+  title: t('settings.accountUpdates'),
+  description: t('settings.accountUpdatesDescription'),
   fields: [{
     name: 'weekly_digest',
-    label: 'Weekly digest',
-    description: 'Receive a weekly digest of news.'
+    label: t('settings.weeklyDigest'),
+    description: t('settings.weeklyDigestDescription')
   }, {
     name: 'product_updates',
-    label: 'Product updates',
-    description: 'Receive a monthly email with all new features and updates.'
+    label: t('settings.productUpdates'),
+    description: t('settings.productUpdatesDescription')
   }, {
     name: 'important_updates',
-    label: 'Important updates',
-    description: 'Receive emails about important updates like security fixes, maintenance, etc.'
+    label: t('settings.importantUpdates'),
+    description: t('settings.importantUpdatesDescription')
   }]
-}]
+}])
 
 async function onChange() {
   // Do something with data

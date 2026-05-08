@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval, format } from 'date-fns'
+import { eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval } from 'date-fns'
 import { VisXYContainer, VisLine, VisAxis, VisArea, VisCrosshair, VisTooltip } from '@unovis/vue'
 import type { Period, Range } from '~/types'
 
@@ -9,6 +9,8 @@ const props = defineProps<{
   period: Period
   range: Range
 }>()
+const { t } = useAppLocale()
+const { formatCurrency, formatDate: formatLocaleDate } = useLocaleFormatters()
 
 type DataRecord = {
   date: Date
@@ -37,14 +39,16 @@ const y = (d: DataRecord) => d.amount
 
 const total = computed(() => data.value.reduce((acc: number, { amount }) => acc + amount, 0))
 
-const formatNumber = new Intl.NumberFormat('en', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format
-
-const formatDate = (date: Date): string => {
+const formatChartDate = (date: Date): string => {
   return ({
-    daily: format(date, 'd MMM'),
-    weekly: format(date, 'd MMM'),
-    monthly: format(date, 'MMM yyy')
+    daily: formatDateIntl(date, { day: 'numeric', month: 'short' }),
+    weekly: formatDateIntl(date, { day: 'numeric', month: 'short' }),
+    monthly: formatDateIntl(date, { month: 'short', year: 'numeric' })
   })[props.period]
+}
+
+function formatDateIntl(date: Date, options: Intl.DateTimeFormatOptions) {
+  return formatLocaleDate(date, options)
 }
 
 const xTicks = (i: number) => {
@@ -52,10 +56,10 @@ const xTicks = (i: number) => {
     return ''
   }
 
-  return formatDate(data.value[i].date)
+  return formatChartDate(data.value[i].date)
 }
 
-const template = (d: DataRecord) => `${formatDate(d.date)}: ${formatNumber(d.amount)}`
+const template = (d: DataRecord) => `${formatChartDate(d.date)}: ${formatCurrency(d.amount)}`
 </script>
 
 <template>
@@ -63,10 +67,10 @@ const template = (d: DataRecord) => `${formatDate(d.date)}: ${formatNumber(d.amo
     <template #header>
       <div>
         <p class="text-xs text-muted uppercase mb-1.5">
-          Revenue
+          {{ t('home.revenue') }}
         </p>
         <p class="text-3xl text-highlighted font-semibold">
-          {{ formatNumber(total) }}
+          {{ formatCurrency(total) }}
         </p>
       </div>
     </template>

@@ -5,6 +5,8 @@ defineProps<{
   collapsed?: boolean
 }>()
 
+const { t } = useAppLocale()
+
 const teams = ref([{
   label: 'Nuxt',
   avatar: {
@@ -33,10 +35,10 @@ const items = computed<DropdownMenuItem[][]>(() => {
       selectedTeam.value = team
     }
   })), [{
-    label: 'Create team',
+    label: t('teams.create'),
     icon: 'i-lucide-circle-plus'
   }, {
-    label: 'Manage teams',
+    label: t('teams.manage'),
     icon: 'i-lucide-cog'
   }]]
 })

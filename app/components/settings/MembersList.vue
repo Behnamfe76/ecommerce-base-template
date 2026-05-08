@@ -5,15 +5,16 @@ import type { Member } from '~/types'
 defineProps<{
   members: Member[]
 }>()
+const { t } = useAppLocale()
 
-const items = [{
-  label: 'Edit member',
+const items = computed<DropdownMenuItem[]>(() => [{
+  label: t('settings.editMember'),
   onSelect: () => console.log('Edit member')
 }, {
-  label: 'Remove member',
+  label: t('settings.removeMember'),
   color: 'error' as const,
   onSelect: () => console.log('Remove member')
-}] satisfies DropdownMenuItem[]
+}])
 </script>
 
 <template>
@@ -42,9 +43,12 @@ const items = [{
       <div class="flex items-center gap-3">
         <USelect
           :model-value="member.role"
-          :items="['member', 'owner']"
+          :items="[
+            { value: 'member', label: t('settings.member') },
+            { value: 'owner', label: t('settings.owner') }
+          ]"
           color="neutral"
-          :ui="{ value: 'capitalize', item: 'capitalize' }"
+          :ui="{ }"
         />
 
         <UDropdownMenu :items="items" :content="{ align: 'end' }">

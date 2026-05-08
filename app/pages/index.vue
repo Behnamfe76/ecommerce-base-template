@@ -4,16 +4,17 @@ import type { DropdownMenuItem } from '@nuxt/ui'
 import type { Period, Range } from '~/types'
 
 const { isNotificationsSlideoverOpen } = useDashboard()
+const { t } = useAppLocale()
 
-const items = [[{
-  label: 'New mail',
+const items = computed<DropdownMenuItem[][]>(() => [[{
+  label: t('home.newMail'),
   icon: 'i-lucide-send',
   to: '/inbox'
 }, {
-  label: 'New customer',
+  label: t('home.newCustomer'),
   icon: 'i-lucide-user-plus',
   to: '/customers'
-}]] satisfies DropdownMenuItem[][]
+}]])
 
 const range = shallowRef<Range>({
   start: sub(new Date(), { days: 14 }),
@@ -25,13 +26,13 @@ const period = ref<Period>('daily')
 <template>
   <UDashboardPanel id="home">
     <template #header>
-      <UDashboardNavbar title="Home" :ui="{ right: 'gap-3' }">
+      <UDashboardNavbar :title="t('home.title')" :ui="{ right: 'gap-3' }">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
 
         <template #right>
-          <UTooltip text="Notifications" :shortcuts="['N']">
+          <UTooltip :text="t('home.notifications')" :shortcuts="['N']">
             <UButton
               color="neutral"
               variant="ghost"

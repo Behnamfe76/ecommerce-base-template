@@ -7,6 +7,7 @@ const model = defineModel<Period>({ required: true })
 const props = defineProps<{
   range: Range
 }>()
+const { t } = useAppLocale()
 
 const days = computed(() => eachDayOfInterval(props.range))
 
@@ -36,14 +37,19 @@ watch(periods, () => {
     model.value = periods.value[0]!
   }
 })
+
+const items = computed(() => periods.value.map(period => ({
+  value: period,
+  label: t(`home.${period}`)
+})))
 </script>
 
 <template>
   <USelect
     v-model="model"
-    :items="periods"
+    :items="items"
     variant="ghost"
     class="data-[state=open]:bg-elevated"
-    :ui="{ value: 'capitalize', itemLabel: 'capitalize', trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }"
+    :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }"
   />
 </template>

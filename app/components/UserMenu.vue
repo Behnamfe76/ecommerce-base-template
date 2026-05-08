@@ -7,6 +7,7 @@ defineProps<{
 
 const colorMode = useColorMode()
 const appConfig = useAppConfig()
+const { t, availableLocales, locale, setLocale } = useAppLocale()
 
 const colors = ['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose']
 const neutrals = ['slate', 'gray', 'zinc', 'neutral', 'stone']
@@ -24,20 +25,20 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
   label: user.value.name,
   avatar: user.value.avatar
 }], [{
-  label: 'Profile',
+  label: t('userMenu.profile'),
   icon: 'i-lucide-user'
 }, {
-  label: 'Billing',
+  label: t('userMenu.billing'),
   icon: 'i-lucide-credit-card'
 }, {
-  label: 'Settings',
+  label: t('userMenu.settings'),
   icon: 'i-lucide-settings',
   to: '/settings'
 }], [{
-  label: 'Theme',
+  label: t('userMenu.theme'),
   icon: 'i-lucide-palette',
   children: [{
-    label: 'Primary',
+    label: t('userMenu.primary'),
     slot: 'chip',
     chip: appConfig.ui.colors.primary,
     content: {
@@ -57,7 +58,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       }
     }))
   }, {
-    label: 'Neutral',
+    label: t('userMenu.neutral'),
     slot: 'chip',
     chip: appConfig.ui.colors.neutral === 'neutral' ? 'old-neutral' : appConfig.ui.colors.neutral,
     content: {
@@ -78,10 +79,10 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     }))
   }]
 }, {
-  label: 'Appearance',
+  label: t('userMenu.appearance'),
   icon: 'i-lucide-sun-moon',
   children: [{
-    label: 'Light',
+    label: t('userMenu.light'),
     icon: 'i-lucide-sun',
     type: 'checkbox',
     checked: colorMode.value === 'light',
@@ -91,7 +92,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       colorMode.preference = 'light'
     }
   }, {
-    label: 'Dark',
+    label: t('userMenu.dark'),
     icon: 'i-lucide-moon',
     type: 'checkbox',
     checked: colorMode.value === 'dark',
@@ -104,49 +105,65 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       e.preventDefault()
     }
   }]
+}, {
+  label: t('locale.label'),
+  icon: 'i-lucide-languages',
+  children: availableLocales.map(localeItem => ({
+    label: t(`locale.${localeItem.code}`),
+    type: 'checkbox',
+    checked: locale.value === localeItem.code,
+    onUpdateChecked(checked: boolean) {
+      if (checked) {
+        setLocale(localeItem.code)
+      }
+    },
+    onSelect(e: Event) {
+      e.preventDefault()
+    }
+  }))
 }], [{
-  label: 'Templates',
+  label: t('userMenu.templates'),
   icon: 'i-lucide-layout-template',
   children: [{
-    label: 'Starter',
+    label: t('userMenu.starter'),
     to: 'https://starter-template.nuxt.dev/'
   }, {
-    label: 'Landing',
+    label: t('userMenu.landing'),
     to: 'https://landing-template.nuxt.dev/'
   }, {
-    label: 'Docs',
+    label: t('userMenu.docs'),
     to: 'https://docs-template.nuxt.dev/'
   }, {
-    label: 'SaaS',
+    label: t('userMenu.saas'),
     to: 'https://saas-template.nuxt.dev/'
   }, {
-    label: 'Dashboard',
+    label: t('userMenu.dashboard'),
     to: 'https://dashboard-template.nuxt.dev/',
     color: 'primary',
     checked: true,
     type: 'checkbox'
   }, {
-    label: 'Chat',
+    label: t('userMenu.chat'),
     to: 'https://chat-template.nuxt.dev/'
   }, {
-    label: 'Portfolio',
+    label: t('userMenu.portfolio'),
     to: 'https://portfolio-template.nuxt.dev/'
   }, {
-    label: 'Changelog',
+    label: t('userMenu.changelog'),
     to: 'https://changelog-template.nuxt.dev/'
   }]
 }], [{
-  label: 'Documentation',
+  label: t('userMenu.documentation'),
   icon: 'i-lucide-book-open',
   to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
   target: '_blank'
 }, {
-  label: 'GitHub repository',
+  label: t('userMenu.github'),
   icon: 'i-simple-icons-github',
   to: 'https://github.com/nuxt-ui-templates/dashboard',
   target: '_blank'
 }, {
-  label: 'Log out',
+  label: t('userMenu.logout'),
   icon: 'i-lucide-log-out'
 }]]))
 </script>

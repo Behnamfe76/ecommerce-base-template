@@ -2,6 +2,8 @@
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
 
+const { t } = useAppLocale()
+
 const fileRef = ref<HTMLInputElement>()
 
 const profileSchema = z.object({
@@ -24,8 +26,8 @@ const profile = reactive<Partial<ProfileSchema>>({
 const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
   toast.add({
-    title: 'Success',
-    description: 'Your settings have been updated.',
+    title: t('common.success'),
+    description: t('settings.saved'),
     icon: 'i-lucide-check',
     color: 'success'
   })
@@ -55,15 +57,15 @@ function onFileClick() {
     @submit="onSubmit"
   >
     <UPageCard
-      title="Profile"
-      description="These informations will be displayed publicly."
+      :title="t('settings.profile')"
+      :description="t('settings.profileDescription')"
       variant="naked"
       orientation="horizontal"
       class="mb-4"
     >
       <UButton
         form="settings"
-        label="Save changes"
+        :label="t('common.saveChanges')"
         color="neutral"
         type="submit"
         class="w-fit lg:ms-auto"
@@ -73,8 +75,8 @@ function onFileClick() {
     <UPageCard variant="subtle">
       <UFormField
         name="name"
-        label="Name"
-        description="Will appear on receipts, invoices, and other communication."
+        :label="t('settings.name')"
+        :description="t('settings.nameDescription')"
         required
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
@@ -86,8 +88,8 @@ function onFileClick() {
       <USeparator />
       <UFormField
         name="email"
-        label="Email"
-        description="Used to sign in, for email receipts and product updates."
+        :label="t('settings.email')"
+        :description="t('settings.emailDescription')"
         required
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
@@ -100,8 +102,8 @@ function onFileClick() {
       <USeparator />
       <UFormField
         name="username"
-        label="Username"
-        description="Your unique username for logging in and your profile URL."
+        :label="t('settings.username')"
+        :description="t('settings.usernameDescription')"
         required
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
@@ -114,8 +116,8 @@ function onFileClick() {
       <USeparator />
       <UFormField
         name="avatar"
-        label="Avatar"
-        description="JPG, GIF or PNG. 1MB Max."
+        :label="t('settings.avatar')"
+        :description="t('settings.avatarDescription')"
         class="flex max-sm:flex-col justify-between sm:items-center gap-4"
       >
         <div class="flex flex-wrap items-center gap-3">
@@ -125,7 +127,7 @@ function onFileClick() {
             size="lg"
           />
           <UButton
-            label="Choose"
+            :label="t('common.choose')"
             color="neutral"
             @click="onFileClick"
           />
@@ -141,8 +143,8 @@ function onFileClick() {
       <USeparator />
       <UFormField
         name="bio"
-        label="Bio"
-        description="Brief description for your profile. URLs are hyperlinked."
+        :label="t('settings.bio')"
+        :description="t('settings.bioDescription')"
         class="flex max-sm:flex-col justify-between items-start gap-4"
         :ui="{ container: 'w-full' }"
       >

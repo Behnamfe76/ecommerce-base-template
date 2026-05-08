@@ -6,6 +6,7 @@ withDefaults(defineProps<{
 })
 
 const open = ref(false)
+const { t } = useAppLocale()
 
 async function onSubmit() {
   await new Promise(resolve => setTimeout(resolve, 1000))
@@ -16,21 +17,21 @@ async function onSubmit() {
 <template>
   <UModal
     v-model:open="open"
-    :title="`Delete ${count} customer${count > 1 ? 's' : ''}`"
-    :description="`Are you sure, this action cannot be undone.`"
+    :title="t('customers.deleteTitle', { count })"
+    :description="t('customers.deleteDescription')"
   >
     <slot />
 
     <template #body>
       <div class="flex justify-end gap-2">
         <UButton
-          label="Cancel"
+          :label="t('common.cancel')"
           color="neutral"
           variant="subtle"
           @click="open = false"
         />
         <UButton
-          label="Delete"
+          :label="t('common.delete')"
           color="error"
           variant="solid"
           loading-auto
