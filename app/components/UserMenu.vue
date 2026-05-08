@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from '@nuxt/ui'
 
-defineProps<{
+const props = defineProps<{
   collapsed?: boolean
 }>()
 
 const colorMode = useColorMode()
 const appConfig = useAppConfig()
-const { t, availableLocales, locale, setLocale } = useAppLocale()
+const { t, availableLocales, locale, setLocale, isRtl } = useAppLocale()
 
 const colors = ['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose']
 const neutrals = ['slate', 'gray', 'zinc', 'neutral', 'stone']
@@ -19,6 +19,17 @@ const user = ref({
     alt: 'Benjamin Canac'
   }
 })
+
+const contentAlign = computed(() => {
+  if (isRtl.value) {
+    return props.collapsed ? 'center' : 'end'
+  }
+
+  return props.collapsed ? 'center' : 'start'
+})
+
+const primaryContentAlign = computed(() => isRtl.value ? 'end' : 'start')
+const neutralContentAlign = computed(() => isRtl.value ? 'start' : 'end')
 
 const items = computed<DropdownMenuItem[][]>(() => ([[{
   type: 'label',
@@ -42,7 +53,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     slot: 'chip',
     chip: appConfig.ui.colors.primary,
     content: {
-      align: 'center',
+      align: primaryContentAlign.value,
       collisionPadding: 16
     },
     children: colors.map(color => ({
@@ -62,7 +73,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     slot: 'chip',
     chip: appConfig.ui.colors.neutral === 'neutral' ? 'old-neutral' : appConfig.ui.colors.neutral,
     content: {
-      align: 'end',
+      align: neutralContentAlign.value,
       collisionPadding: 16
     },
     children: neutrals.map(color => ({
@@ -169,36 +180,32 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
 </script>
 
 <template>
-  <UDropdownMenu
-    :items="items"
-    :content="{ align: 'center', collisionPadding: 12 }"
-    :ui="{ content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)' }"
-  >
-    <UButton
-      v-bind="{
-        ...user,
-        label: collapsed ? undefined : user?.name,
-        trailingIcon: collapsed ? undefined : 'i-lucide-chevrons-up-down'
-      }"
-      color="neutral"
-      variant="ghost"
-      block
-      :square="collapsed"
-      class="data-[state=open]:bg-elevated"
-      :ui="{
-        trailingIcon: 'text-dimmed'
-      }"
-    />
+  <UDropdownMenu :items="items" :content="{ align: contentAlign, collisionPadding: 12 }" :ui="{
+    content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)',
+    itemLabel: 'text-start',
+    itemDescription: 'text-start'
+  }">
+    <UButton v-bind="{
+      ...user,
+      label: props.collapsed ? undefined : user?.name,
+      trailingIcon: props.collapsed ? undefined : 'i-lucide-chevrons-up-down'
+    }" color="neutral" variant="ghost" block :square="props.collapsed" class="data-[state=open]:bg-elevated" :ui="{
+        base: props.collapsed ? undefined : 'justify-between',
+        label: 'text-start truncate',
+        trailingIcon: 'text-dimmed shrink-0'
+      }" />
+
+    <template #item-trailing="{ item, active }">
+      <UIcon v-if="item.children?.length" :name="isRtl ? 'i-lucide-chevron-left' : 'i-lucide-chevron-right'"
+        class="shrink-0 size-5" />
+    </template>
 
     <template #chip-leading="{ item }">
-      <div class="inline-flex items-center justify-center shrink-0 size-5">
-        <span
-          class="rounded-full ring ring-bg bg-(--chip-light) dark:bg-(--chip-dark) size-2"
-          :style="{
-            '--chip-light': `var(--color-${(item as any).chip}-500)`,
-            '--chip-dark': `var(--color-${(item as any).chip}-400)`
-          }"
-        />
+      <div class="inline-flex items-center justify-center shrink-0 size-5 ltr:mr-2 rtl:ml-2">
+        <span class="rounded-full ring ring-bg bg-(--chip-light) dark:bg-(--chip-dark) size-2" :style="{
+          '--chip-light': `var(--color-${(item as any).chip}-500)`,
+          '--chip-dark': `var(--color-${(item as any).chip}-400)`
+        }" />
       </div>
     </template>
   </UDropdownMenu>

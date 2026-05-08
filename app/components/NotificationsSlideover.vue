@@ -2,7 +2,7 @@
 import type { Notification } from '~/types'
 
 const { isNotificationsSlideoverOpen } = useDashboard()
-const { t } = useAppLocale()
+const { t, isRtl } = useAppLocale()
 const { formatRelativeTimeFromNow } = useLocaleFormatters()
 
 const { data: notifications } = await useFetch<Notification[]>('/api/notifications')
@@ -12,6 +12,7 @@ const { data: notifications } = await useFetch<Notification[]>('/api/notificatio
   <USlideover
     v-model:open="isNotificationsSlideoverOpen"
     :title="t('notifications.title')"
+    :side="!isRtl ? 'right' : 'left'"
   >
     <template #body>
       <NuxtLink
