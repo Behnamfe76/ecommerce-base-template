@@ -72,6 +72,24 @@ export interface RegisterCredentials extends LoginCredentials {
   name: string
 }
 
+export interface OtpRequestPayload {
+  email: string
+}
+
+export interface OtpVerifyPayload {
+  email: string
+  code: string
+}
+
+export interface OtpRequestResponse {
+  challengeId: string
+  expiresIn: number
+  devCode?: string
+}
+
+export type AuthMethod = 'password' | 'otp' | 'passkey'
+export type AuthProvider = 'google' | 'github'
+
 export interface ApiErrorData {
   message?: string
   statusCode?: number

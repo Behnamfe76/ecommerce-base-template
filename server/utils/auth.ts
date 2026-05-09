@@ -18,6 +18,12 @@ interface SessionRecord {
   expiresAt: number
 }
 
+interface OtpChallengeRecord {
+  userId: number
+  code: string
+  expiresAt: number
+}
+
 const users = new Map<number, StoredUser>([[
   1,
   {
@@ -37,6 +43,7 @@ let nextUserId = 2
 
 const accessSessions = new Map<string, SessionRecord>()
 const refreshSessions = new Map<string, SessionRecord>()
+const otpChallenges = new Map<string, OtpChallengeRecord>()
 
 function cookieOptions(maxAge: number) {
   return {
@@ -50,6 +57,10 @@ function cookieOptions(maxAge: number) {
 
 function createToken() {
   return crypto.randomUUID()
+}
+
+function createOtpCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString()
 }
 
 function sanitizeUser(user: StoredUser) {
@@ -250,6 +261,83 @@ export function registerUser(
 
   users.set(user.id, user)
   userIdsByEmail.set(user.email, user.id)
+
+  const tokens = createSession(user.id)
+  setSessionCookies(event, tokens)
+
+  return sanitizeUser(user)
+}
+
+export function requestOtpChallenge(payload: { email?: string }) {
+  if (!payload.email) {
+    throw createError({
+      statusCode: 422,
+      message: 'Email is required'
+    })
+  }
+
+  const user = getUserByEmail(payload.email)
+
+  if (!user) {
+    throw createError({
+      statusCode: 404,
+      message: 'No account found for this email'
+    })
+  }
+
+  const challengeId = createToken()
+  const code = createOtpCode()
+  const expiresIn = 60 * 5
+
+  otpChallenges.set(challengeId, {
+    userId: user.id,
+    code,
+    expiresAt: Date.now() + expiresIn * 1000
+  })
+
+  return {
+    challengeId,
+    expiresIn,
+    devCode: process.env.NODE_ENV !== 'production' ? code : undefined
+  }
+}
+
+export function verifyOtpChallenge(
+  event: Parameters<typeof getCookie>[0],
+  payload: { email?: string, code?: string }
+) {
+  if (!payload.email || !payload.code) {
+    throw createError({
+      statusCode: 422,
+      message: 'Email and code are required'
+    })
+  }
+
+  const user = getUserByEmail(payload.email)
+
+  if (!user) {
+    throw createError({
+      statusCode: 404,
+      message: 'No account found for this email'
+    })
+  }
+
+  const challenge = [...otpChallenges.values()].find(item =>
+    item.userId === user.id && item.code === payload.code
+  )
+
+  if (!challenge || challenge.expiresAt <= Date.now()) {
+    throw createError({
+      statusCode: 401,
+      message: 'Invalid or expired verification code'
+    })
+  }
+
+  for (const [challengeId, record] of otpChallenges.entries()) {
+    if (record.userId === user.id) {
+      otpChallenges.delete(challengeId)
+    }
+  }
 
   const tokens = createSession(user.id)
   setSessionCookies(event, tokens)

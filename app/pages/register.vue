@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as z from 'zod'
-import type { AuthFormField, FormSubmitEvent } from '@nuxt/ui'
+import type { AuthFormField, ButtonProps, FormSubmitEvent } from '@nuxt/ui'
 import type { RegisterCredentials } from '~/types'
 
 definePageMeta({
@@ -11,6 +11,7 @@ definePageMeta({
 const { t } = useAppLocale()
 const toast = useToast()
 const { register } = useAuthSession()
+const { availableProviders } = useAuthMethods()
 
 const schema = z.object({
   name: z.string().min(2),
@@ -52,6 +53,22 @@ const fields = computed<AuthFormField[]>(() => [{
   required: true
 }])
 
+const providers = computed<ButtonProps[]>(() => availableProviders.value.map(provider => ({
+  label: t(`auth.providers.${provider}`),
+  icon: provider === 'google' ? 'i-simple-icons-google' : 'i-simple-icons-github',
+  color: 'neutral',
+  variant: 'subtle',
+  block: true,
+  onClick: () => {
+    toast.add({
+      title: t('auth.providerUnavailableTitle'),
+      description: t('auth.providerUnavailableDescription', { provider: t(`auth.providers.${provider}`) }),
+      color: 'warning',
+      icon: 'i-lucide-info'
+    })
+  }
+})))
+
 const registerMutation = useApiMutation({
   mutation: ({ confirmPassword: _confirmPassword, ...payload }: RegisterFormState) => register(payload)
 })
@@ -74,6 +91,7 @@ async function onSubmit(event: FormSubmitEvent<RegisterFormState>) {
   <UAuthForm
     :schema="schema"
     :fields="fields"
+    :providers="providers"
     :title="t('auth.registerTitle')"
     :description="t('auth.registerDescription')"
     icon="i-lucide-user-plus"

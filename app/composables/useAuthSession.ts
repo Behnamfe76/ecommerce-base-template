@@ -1,4 +1,12 @@
-import type { AuthResponse, AuthUser, LoginCredentials, RegisterCredentials } from '~/types'
+import type {
+  AuthResponse,
+  AuthUser,
+  LoginCredentials,
+  OtpRequestPayload,
+  OtpRequestResponse,
+  OtpVerifyPayload,
+  RegisterCredentials
+} from '~/types'
 
 let sessionPromise: Promise<AuthUser | null> | null = null
 
@@ -72,12 +80,33 @@ export function useAuthSession() {
     authState.setAnonymous()
   }
 
+  async function requestOtp(payload: OtpRequestPayload) {
+    return await api.request<OtpRequestResponse, OtpRequestPayload>('/auth/otp/request', {
+      method: 'POST',
+      body: payload,
+      skipAuthRefresh: true
+    })
+  }
+
+  async function verifyOtp(payload: OtpVerifyPayload) {
+    const response = await api.request<AuthResponse, OtpVerifyPayload>('/auth/otp/verify', {
+      method: 'POST',
+      body: payload,
+      skipAuthRefresh: true
+    })
+
+    authState.setAuthenticated(response.user)
+    return response.user
+  }
+
   return {
     ...authState,
     fetchSession,
     ensureSession: fetchSession,
     login,
     register,
+    requestOtp,
+    verifyOtp,
     refresh,
     logout
   }
