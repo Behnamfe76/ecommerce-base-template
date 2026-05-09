@@ -6,14 +6,18 @@ const toast = useToast()
 const { t, isRtl } = useAppLocale()
 
 const open = ref(false)
+const searchTerm = ref('')
 
-const searchUi = {
+const searchModalUi = {
   modal: 'sm:max-w-3xl overflow-hidden border border-default/60 bg-default/95 shadow-2xl shadow-black/10 backdrop-blur-xl dark:bg-elevated/95 dark:shadow-black/40',
-  content: 'divide-y divide-default/60',
+  content: 'overflow-hidden'
+}
+
+const searchPaletteUi = {
+  root: 'flex min-h-0 min-w-0 flex-col divide-y divide-default/60',
   viewport: 'max-h-[24rem] divide-y divide-default/40',
   group: 'p-2',
   label: 'px-3 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted',
-  input: 'flex flex-col h-14 border-0 bg-transparent px-4 text-sm text-highlighted placeholder:text-muted focus:ring-0 text-start',
   empty: 'px-6 py-12',
   footer: 'flex items-center justify-between gap-3 px-4 py-3 bg-elevated/40 dark:bg-elevated/20',
   item: 'group relative flex flex-row rtl:flex-row-reverse w-full items-center gap-3 overflow-hidden rounded-xl px-3 py-2.5 text-start transition-colors data-[selected=true]:bg-primary/10 data-[selected=true]:text-highlighted dark:data-[selected=true]:bg-primary/15',
@@ -203,125 +207,172 @@ onMounted(async () => {
     </UDashboardSidebar>
 
     <UDashboardSearch
+      v-model:search-term="searchTerm"
       :groups="groups"
-      :ui="searchUi"
+      :ui="searchModalUi"
       :placeholder="`${t('common.search')}...`"
     >
-      <template #group-label="{ label, ui }">
-        <div
-          :class="[ui.label, 'flex items-center gap-2 text-start flex-row-reverse rtl:flex-row rtl:text-end']"
-        >
-          <span class="h-px flex-1 bg-default/70" />
-          <span>{{ label }}</span>
-          <span class="h-px w-6 bg-default/70" />
-        </div>
-      </template>
+      <template #content="{ close }">
+        <div class="flex min-h-0 flex-col divide-y divide-default/60">
+          <div class="flex flex-row items-center gap-3 px-4 py-3">
+            <div class="relative min-w-0 flex-1 ">
+              <UIcon
+                name="i-lucide-search"
+                class="pointer-events-none absolute top-1/2 z-10 size-5 -translate-y-1/2 text-dimmed ltr:left-3 rtl:right-3"
+              />
 
-      <template #item-leading="{ item, ui }">
-        <div class="flex items-center justify-center rounded-lg bg-elevated/80 p-2 ring-1 ring-inset ring-default/60 dark:bg-default/40">
-          <UIcon
-            v-if="item.icon"
-            :name="item.icon"
-            :class="ui.itemLeadingIcon"
-          />
-          <UIcon
-            v-else-if="item.checked"
-            name="i-lucide-check"
-            :class="ui.itemLeadingIcon"
-          />
-          <UIcon
-            v-else
-            name="i-lucide-circle"
-            :class="ui.itemLeadingIcon"
-          />
-        </div>
-      </template>
+              <UInput
+                v-model="searchTerm"
+                :placeholder="`${t('common.search')}...`"
+                autofocus
+                size="xl"
+                color="neutral"
+                variant="none"
+                class="w-full"
+                :ui="{
+                  base: 'h-12 rounded-xl bg-elevated/70 px-3 text-sm text-highlighted ring-1 ring-inset ring-default/60 placeholder:text-muted focus-visible:ring-2 focus-visible:ring-primary/50 dark:bg-default/40',
+                  leading: 'hidden',
+                  trailing: 'hidden'
+                }"
+                :class="isRtl ? 'rtl:text-end rtl:pr-11 rtl:pl-3' : 'pl-11 pr-3 text-start'"
+              />
+            </div>
 
-      <template #item-label="{ item, ui }">
-        <div class="min-w-0 flex-1 text-start rtl:text-end">
-          <div :class="ui.itemLabel">
-            {{ item.label }}
+            <UButton
+              color="neutral"
+              variant="ghost"
+              square
+              icon="i-lucide-x"
+              class="shrink-0"
+              @click="close()"
+            />
           </div>
-          <div
-            v-if="item.suffix"
-            :class="ui.itemDescription"
+
+          <UCommandPalette
+            v-model:search-term="searchTerm"
+            :groups="groups"
+            :input="false"
+            :ui="searchPaletteUi"
+            class="min-h-0"
           >
-            {{ item.suffix }}
-          </div>
-        </div>
-      </template>
+            <template #group-label="{ label, ui }">
+              <div
+                :class="[ui.label, 'flex items-center gap-2 text-start flex-row-reverse rtl:flex-row rtl:text-end']"
+              >
+                <span class="h-px flex-1 bg-default/70" />
+                <span>{{ label }}</span>
+                <span class="h-px w-6 bg-default/70" />
+              </div>
+            </template>
 
-      <template #item-trailing="{ item, ui }">
-        <div
-          :class="[ui.itemTrailing, 'ltr:ml-auto rtl:mr-auto rtl:flex-row-reverse']"
-        >
-          <UBadge
-            v-if="item.target === '_blank'"
-            color="neutral"
-            variant="soft"
-            size="sm"
-            label="↗"
-            class="rounded-md"
-          />
+            <template #item-leading="{ item, ui }">
+              <div class="flex items-center justify-center rounded-lg bg-elevated/80 p-2 ring-1 ring-inset ring-default/60 dark:bg-default/40">
+                <UIcon
+                  v-if="item.icon"
+                  :name="item.icon"
+                  :class="ui.itemLeadingIcon"
+                />
+                <UIcon
+                  v-else-if="item.checked"
+                  name="i-lucide-check"
+                  :class="ui.itemLeadingIcon"
+                />
+                <UIcon
+                  v-else
+                  name="i-lucide-circle"
+                  :class="ui.itemLeadingIcon"
+                />
+              </div>
+            </template>
 
-          <template v-if="item.kbds?.length">
-            <UKbd
-              v-for="(kbd, index) in item.kbds"
-              :key="index"
-              size="sm"
-              variant="subtle"
-              class="uppercase"
-            >
-              {{ kbd }}
-            </UKbd>
-          </template>
+            <template #item-label="{ item, ui }">
+              <div class="min-w-0 flex-1 text-start rtl:text-end">
+                <div :class="ui.itemLabel">
+                  {{ item.label }}
+                </div>
+                <div
+                  v-if="item.suffix"
+                  :class="ui.itemDescription"
+                >
+                  {{ item.suffix }}
+                </div>
+              </div>
+            </template>
 
-          <UIcon
-            v-if="item.children?.length"
-            :name="isRtl ? 'i-lucide-chevron-left' : 'i-lucide-chevron-right'"
-            class="size-4 shrink-0 text-dimmed"
-          />
-        </div>
-      </template>
+            <template #item-trailing="{ item, ui }">
+              <div
+                :class="[ui.itemTrailing, 'ltr:ml-auto rtl:mr-auto rtl:flex-row-reverse']"
+              >
+                <UBadge
+                  v-if="item.target === '_blank'"
+                  color="neutral"
+                  variant="soft"
+                  size="sm"
+                  label="↗"
+                  class="rounded-md"
+                />
 
-      <template #empty="{ searchTerm }">
-        <div class="flex flex-col items-center justify-center gap-3 text-center">
-          <div class="flex size-12 items-center justify-center rounded-2xl bg-elevated ring-1 ring-inset ring-default/60 dark:bg-default/40">
-            <UIcon name="i-lucide-search-x" class="size-5 text-dimmed" />
-          </div>
-          <div class="space-y-1">
-            <p class="text-sm font-medium text-highlighted">
-              {{ t('common.noResults') }}
-            </p>
-            <p class="text-xs text-muted">
-              {{ searchTerm ? `${t('common.search')}: ${searchTerm}` : t('search.helpText') }}
-            </p>
-          </div>
-        </div>
-      </template>
+                <template v-if="item.kbds?.length">
+                  <UKbd
+                    v-for="(kbd, index) in item.kbds"
+                    :key="index"
+                    size="sm"
+                    variant="subtle"
+                    class="uppercase"
+                  >
+                    {{ kbd }}
+                  </UKbd>
+                </template>
 
-      <template #footer>
-        <div class="flex w-full items-center justify-between gap-3 rtl:flex-row-reverse">
-          <div class="min-w-0 text-start rtl:text-end">
-            <p class="text-xs font-medium text-highlighted">
-              {{ t('search.footerPrimary') }}
-            </p>
-            <p class="text-[11px] text-muted">
-              {{ t('search.footerSecondary') }}
-            </p>
-          </div>
+                <UIcon
+                  v-if="item.children?.length"
+                  :name="isRtl ? 'i-lucide-chevron-left' : 'i-lucide-chevron-right'"
+                  class="size-4 shrink-0 text-dimmed"
+                />
+              </div>
+            </template>
 
-          <div class="flex items-center gap-1.5 rtl:flex-row-reverse">
-            <UKbd size="sm" variant="subtle">
-              ↑
-            </UKbd>
-            <UKbd size="sm" variant="subtle">
-              ↓
-            </UKbd>
-            <UKbd size="sm" variant="subtle">
-              Enter
-            </UKbd>
-          </div>
+            <template #empty>
+              <div class="flex flex-col items-center justify-center gap-3 text-center">
+                <div class="flex size-12 items-center justify-center rounded-2xl bg-elevated ring-1 ring-inset ring-default/60 dark:bg-default/40">
+                  <UIcon name="i-lucide-search-x" class="size-5 text-dimmed" />
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-highlighted">
+                    {{ t('common.noResults') }}
+                  </p>
+                  <p class="text-xs text-muted">
+                    {{ searchTerm ? `${t('common.search')}: ${searchTerm}` : t('search.helpText') }}
+                  </p>
+                </div>
+              </div>
+            </template>
+
+            <template #footer>
+              <div class="flex w-full items-center justify-between gap-3 rtl:flex-row-reverse">
+                <div class="min-w-0 text-start rtl:text-end">
+                  <p class="text-xs font-medium text-highlighted">
+                    {{ t('search.footerPrimary') }}
+                  </p>
+                  <p class="text-[11px] text-muted">
+                    {{ t('search.footerSecondary') }}
+                  </p>
+                </div>
+
+                <div class="flex items-center gap-1.5 rtl:flex-row-reverse">
+                  <UKbd size="sm" variant="subtle">
+                    ↑
+                  </UKbd>
+                  <UKbd size="sm" variant="subtle">
+                    ↓
+                  </UKbd>
+                  <UKbd size="sm" variant="subtle">
+                    Enter
+                  </UKbd>
+                </div>
+              </div>
+            </template>
+          </UCommandPalette>
         </div>
       </template>
     </UDashboardSearch>
