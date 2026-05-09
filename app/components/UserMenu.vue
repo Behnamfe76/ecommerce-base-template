@@ -8,16 +8,31 @@ const props = defineProps<{
 const colorMode = useColorMode()
 const appConfig = useAppConfig()
 const { t, availableLocales, locale, setLocale, isRtl } = useAppLocale()
+const { user: authUser, fetchSession, logout } = useAuthSession()
 
 const colors = ['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose']
 const neutrals = ['slate', 'gray', 'zinc', 'neutral', 'stone']
 
-const user = ref({
-  name: 'Benjamin Canac',
+const fallbackUser = {
+  name: 'Demo User',
   avatar: {
-    src: 'https://github.com/benjamincanac.png',
-    alt: 'Benjamin Canac'
+    src: 'https://i.pravatar.cc/128?u=demo-user',
+    alt: 'Demo User'
   }
+}
+
+const user = computed(() => {
+  if (authUser.value) {
+    return {
+      name: authUser.value.name,
+      avatar: {
+        src: `https://i.pravatar.cc/128?u=${authUser.value.email}`,
+        alt: authUser.value.name
+      }
+    }
+  }
+
+  return fallbackUser
 })
 
 const contentAlign = computed(() => {
@@ -175,8 +190,18 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
   target: '_blank'
 }, {
   label: t('userMenu.logout'),
-  icon: 'i-lucide-log-out'
+  icon: 'i-lucide-log-out',
+  async onSelect() {
+    await logout()
+    await navigateTo('/login')
+  }
 }]]))
+
+onMounted(() => {
+  if (!authUser.value) {
+    fetchSession()
+  }
+})
 </script>
 
 <template>

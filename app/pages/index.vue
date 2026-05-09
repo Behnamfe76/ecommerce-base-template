@@ -35,14 +35,21 @@ const { t } = useAppLocale()
           />
 
           <UButton
-            to="/dashboard/customers"
+            to="/login"
             size="xl"
             color="neutral"
             variant="outline"
-            icon="i-lucide-users"
-            :label="t('landing.previewCustomers')"
+            icon="i-lucide-log-in"
+            :label="t('landing.login')"
           />
         </div>
+
+        <p class="text-sm text-muted">
+          {{ t('landing.noAccount') }}
+          <NuxtLink to="/register" class="font-medium text-primary hover:text-primary/80">
+            {{ t('landing.register') }}
+          </NuxtLink>
+        </p>
       </div>
     </UContainer>
   </div>

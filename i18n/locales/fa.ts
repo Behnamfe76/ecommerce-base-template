@@ -7,7 +7,32 @@ export default {
     title: 'عملیات فروشگاه، جداشده از محیط داشبورد.',
     description: 'این صفحه اکنون ورودی عمومی برنامه است و تجربه ادمین قبلی زیر یک پیشوند اختصاصی برای داشبورد در دسترس می‌ماند.',
     openDashboard: 'ورود به داشبورد',
-    previewCustomers: 'نمایش مشتریان'
+    login: 'ورود',
+    noAccount: 'حساب ندارید؟',
+    register: 'ثبت‌نام'
+  },
+  auth: {
+    backToHome: 'بازگشت به خانه',
+    openDashboard: 'داشبورد',
+    loginTitle: 'خوش برگشتید',
+    loginDescription: 'برای ادامه با ایمیل و رمز عبور خود وارد شوید.',
+    loginAction: 'ورود',
+    loginSuccess: 'با موفقیت وارد شدید.',
+    registerTitle: 'ایجاد حساب کاربری',
+    registerDescription: 'برای شروع استفاده از برنامه، حساب خود را ثبت کنید.',
+    registerAction: 'ثبت‌نام',
+    registerSuccess: 'حساب شما با موفقیت ایجاد شد.',
+    email: 'ایمیل',
+    password: 'رمز عبور',
+    passwordPlaceholder: 'رمز عبور خود را وارد کنید',
+    name: 'نام',
+    namePlaceholder: 'نام کامل خود را وارد کنید',
+    confirmPassword: 'تأیید رمز عبور',
+    confirmPasswordPlaceholder: 'رمز عبور را دوباره وارد کنید',
+    noAccount: 'حساب ندارید؟',
+    haveAccount: 'قبلاً حساب دارید؟',
+    registerLink: 'ثبت‌نام',
+    loginLink: 'ورود'
   },
   locale: {
     label: 'زبان',

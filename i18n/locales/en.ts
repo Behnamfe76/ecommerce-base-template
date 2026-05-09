@@ -7,7 +7,32 @@ export default {
     title: 'Commerce operations, separated cleanly from the dashboard.',
     description: 'This entry page is now public-facing. The existing admin experience remains available behind a dedicated dashboard route namespace.',
     openDashboard: 'Open dashboard',
-    previewCustomers: 'Preview customers'
+    login: 'Login',
+    noAccount: 'Need an account?',
+    register: 'Register'
+  },
+  auth: {
+    backToHome: 'Back to home',
+    openDashboard: 'Dashboard',
+    loginTitle: 'Welcome back',
+    loginDescription: 'Sign in with your email and password to continue.',
+    loginAction: 'Login',
+    loginSuccess: 'You are now signed in.',
+    registerTitle: 'Create your account',
+    registerDescription: 'Register with your details to start using the application.',
+    registerAction: 'Register',
+    registerSuccess: 'Your account was created successfully.',
+    email: 'Email',
+    password: 'Password',
+    passwordPlaceholder: 'Enter your password',
+    name: 'Name',
+    namePlaceholder: 'Enter your full name',
+    confirmPassword: 'Confirm password',
+    confirmPasswordPlaceholder: 'Re-enter your password',
+    noAccount: 'Don’t have an account?',
+    haveAccount: 'Already have an account?',
+    registerLink: 'Register',
+    loginLink: 'Login'
   },
   locale: {
     label: 'Language',

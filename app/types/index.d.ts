@@ -52,6 +52,36 @@ export interface Notification {
   date: string
 }
 
+export interface AuthUser {
+  id: number
+  name: string
+  email: string
+  emailVerified: boolean
+}
+
+export interface AuthResponse {
+  user: AuthUser
+}
+
+export interface LoginCredentials {
+  email: string
+  password: string
+}
+
+export interface RegisterCredentials extends LoginCredentials {
+  name: string
+}
+
+export interface ApiErrorData {
+  message?: string
+  statusCode?: number
+  [key: string]: unknown
+}
+
+export type AuthStatus = 'unknown' | 'authenticated' | 'anonymous'
+export type QueryStatus = 'idle' | 'pending' | 'success' | 'error'
+export type MutationStatus = QueryStatus
+
 export type Period = 'daily' | 'weekly' | 'monthly'
 
 export interface Range {
