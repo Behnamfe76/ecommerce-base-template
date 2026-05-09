@@ -66,7 +66,14 @@ export default {
     search: 'Search',
     all: 'All',
     display: 'Display',
-    actions: 'Actions'
+    actions: 'Actions',
+    noResults: 'No results found',
+    loading: 'Loading...'
+  },
+  search: {
+    helpText: 'Type to search for pages, settings, and actions.',
+    footerPrimary: 'Press Ctrl+K to open search',
+    footerSecondary: 'Use ↑ / ↓ to navigate results'
   },
   home: {
     title: 'Home',

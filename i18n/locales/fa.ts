@@ -66,7 +66,14 @@ export default {
     search: 'جستجو',
     all: 'همه',
     display: 'نمایش',
-    actions: 'عملیات'
+    actions: 'عملیات',
+    noResults: 'نتیجه‌ای یافت نشد',
+    loading: 'در حال بارگذاری...'
+  },
+  search: {
+    helpText: 'برای جستجو صفحه‌ها، تنظیمات و عملیات بنویسید.',
+    footerPrimary: 'برای باز کردن جستجو Ctrl+K را فشار دهید',
+    footerSecondary: 'برای جابجایی از ↑ / ↓ استفاده کنید'
   },
   home: {
     title: 'خانه',

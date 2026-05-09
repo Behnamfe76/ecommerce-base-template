@@ -15,6 +15,8 @@ export default defineAppConfig({
     },
     navigationMenu: {
       slots: {
+        list: 'isolate w-full flex-row rtl:flex-row-reverse',
+        root: 'relative flex flex-row rtl:flex-row-reverse gap-1.5 [&>div]:min-w-0',
         link: 'group relative w-full flex flex-row rtl:flex-row-reverse items-center gap-1.5 font-medium text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2',
         linkTrailing: 'group ltr:ms-auto ltr:me-0 rtl:me-auto rtl:ms-0 inline-flex gap-1.5 items-center',
       },
@@ -29,6 +31,11 @@ export default defineAppConfig({
           }
         }
       ],
+    },
+    dashboardSearch: {
+      slots: {
+        modal: ''
+      }
     }
   }
 })
