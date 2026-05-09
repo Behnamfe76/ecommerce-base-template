@@ -27,17 +27,25 @@ const searchPaletteUi = {
   itemTrailing: 'flex shrink-0 items-center gap-1.5 text-dimmed'
 }
 
+const pageSourcePath = computed(() => {
+  if (route.path === '/dashboard') {
+    return '/index'
+  }
+
+  return route.path.replace(/^\/dashboard/, '')
+})
+
 const links = computed<NavigationMenuItem[][]>(() => [[{
   label: t('nav.home'),
   icon: 'i-lucide-house',
-  to: '/',
+  to: '/dashboard',
   onSelect: () => {
     open.value = false
   }
 }, {
   label: t('nav.inbox'),
   icon: 'i-lucide-inbox',
-  to: '/inbox',
+  to: '/dashboard/inbox',
   badge: '4',
   onSelect: () => {
     open.value = false
@@ -45,38 +53,38 @@ const links = computed<NavigationMenuItem[][]>(() => [[{
 }, {
   label: t('nav.customers'),
   icon: 'i-lucide-users',
-  to: '/customers',
+  to: '/dashboard/customers',
   onSelect: () => {
     open.value = false
   }
 }, {
   label: t('nav.settings'),
-  to: '/settings',
+  to: '/dashboard/settings',
   icon: 'i-lucide-settings',
   defaultOpen: true,
   type: 'trigger',
   children: [{
     label: t('nav.general'),
-    to: '/settings',
+    to: '/dashboard/settings',
     exact: true,
     onSelect: () => {
       open.value = false
     }
   }, {
     label: t('nav.members'),
-    to: '/settings/members',
+    to: '/dashboard/settings/members',
     onSelect: () => {
       open.value = false
     }
   }, {
     label: t('nav.notifications'),
-    to: '/settings/notifications',
+    to: '/dashboard/settings/notifications',
     onSelect: () => {
       open.value = false
     }
   }, {
     label: t('nav.security'),
-    to: '/settings/security',
+    to: '/dashboard/settings/security',
     onSelect: () => {
       open.value = false
     }
@@ -99,31 +107,31 @@ const groups = computed(() => [{
   items: [{
     label: t('nav.home'),
     icon: 'i-lucide-house',
-    to: '/'
+    to: '/dashboard'
   }, {
     label: t('nav.inbox'),
     icon: 'i-lucide-inbox',
-    to: '/inbox'
+    to: '/dashboard/inbox'
   }, {
     label: t('nav.customers'),
     icon: 'i-lucide-users',
-    to: '/customers'
+    to: '/dashboard/customers'
   }, {
     label: t('nav.general'),
     icon: 'i-lucide-user',
-    to: '/settings'
+    to: '/dashboard/settings'
   }, {
     label: t('nav.members'),
     icon: 'i-lucide-users',
-    to: '/settings/members'
+    to: '/dashboard/settings/members'
   }, {
     label: t('nav.notifications'),
     icon: 'i-lucide-bell',
-    to: '/settings/notifications'
+    to: '/dashboard/settings/notifications'
   }, {
     label: t('nav.security'),
     icon: 'i-lucide-shield',
-    to: '/settings/security'
+    to: '/dashboard/settings/security'
   }]
 }, {
   id: 'code',
@@ -132,7 +140,7 @@ const groups = computed(() => [{
     id: 'source',
     label: t('nav.viewPageSource'),
     icon: 'i-simple-icons-github',
-    to: `https://github.com/nuxt-ui-templates/dashboard/blob/main/app/pages${route.path === '/' ? '/index' : route.path}.vue`,
+    to: `https://github.com/nuxt-ui-templates/dashboard/blob/main/app/pages${pageSourcePath.value}.vue`,
     target: '_blank'
   }]
 }])

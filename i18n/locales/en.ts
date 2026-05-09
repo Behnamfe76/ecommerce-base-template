@@ -3,6 +3,12 @@ export default {
     title: 'Nuxt Dashboard Template',
     description: 'A professional dashboard template built with Nuxt UI, featuring multiple pages, data visualization, and comprehensive management capabilities for creating powerful admin interfaces.'
   },
+  landing: {
+    title: 'Commerce operations, separated cleanly from the dashboard.',
+    description: 'This entry page is now public-facing. The existing admin experience remains available behind a dedicated dashboard route namespace.',
+    openDashboard: 'Open dashboard',
+    previewCustomers: 'Preview customers'
+  },
   locale: {
     label: 'Language',
     en: 'English',

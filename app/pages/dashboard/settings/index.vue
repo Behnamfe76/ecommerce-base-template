@@ -78,7 +78,7 @@ function onFileClick() {
         :label="t('settings.name')"
         :description="t('settings.nameDescription')"
         required
-        class="flex max-sm:flex-col justify-between items-start gap-4"
+        class="flex max-sm:flex-col items-start justify-between gap-4"
       >
         <UInput
           v-model="profile.name"
@@ -91,7 +91,7 @@ function onFileClick() {
         :label="t('settings.email')"
         :description="t('settings.emailDescription')"
         required
-        class="flex max-sm:flex-col justify-between items-start gap-4"
+        class="flex max-sm:flex-col items-start justify-between gap-4"
       >
         <UInput
           v-model="profile.email"
@@ -105,7 +105,7 @@ function onFileClick() {
         :label="t('settings.username')"
         :description="t('settings.usernameDescription')"
         required
-        class="flex max-sm:flex-col justify-between items-start gap-4"
+        class="flex max-sm:flex-col items-start justify-between gap-4"
       >
         <UInput
           v-model="profile.username"
@@ -118,7 +118,7 @@ function onFileClick() {
         name="avatar"
         :label="t('settings.avatar')"
         :description="t('settings.avatarDescription')"
-        class="flex max-sm:flex-col justify-between sm:items-center gap-4"
+        class="flex max-sm:flex-col gap-4 justify-between sm:items-center"
       >
         <div class="flex flex-wrap items-center gap-3">
           <UAvatar
@@ -145,7 +145,7 @@ function onFileClick() {
         name="bio"
         :label="t('settings.bio')"
         :description="t('settings.bioDescription')"
-        class="flex max-sm:flex-col justify-between items-start gap-4"
+        class="flex max-sm:flex-col items-start justify-between gap-4"
         :ui="{ container: 'w-full' }"
       >
         <UTextarea

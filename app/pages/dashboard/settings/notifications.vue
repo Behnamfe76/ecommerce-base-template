@@ -40,7 +40,6 @@ const sections = computed(() => [{
 }])
 
 async function onChange() {
-  // Do something with data
   console.log(state)
 }
 </script>
@@ -61,7 +60,7 @@ async function onChange() {
         :name="field.name"
         :label="field.label"
         :description="field.description"
-        class="flex items-center justify-between not-last:pb-4 gap-2"
+        class="flex items-center justify-between gap-2 not-last:pb-4"
       >
         <USwitch
           v-model="state[field.name]"

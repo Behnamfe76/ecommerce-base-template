@@ -44,7 +44,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
 }, {
   label: t('userMenu.settings'),
   icon: 'i-lucide-settings',
-  to: '/settings'
+  to: '/dashboard/settings'
 }], [{
   label: t('userMenu.theme'),
   icon: 'i-lucide-palette',
@@ -180,32 +180,50 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
 </script>
 
 <template>
-  <UDropdownMenu :items="items" :content="{ align: contentAlign, collisionPadding: 12 }" :ui="{
-    content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)',
-    itemLabel: 'text-start',
-    itemDescription: 'text-start'
-  }">
-    <UButton v-bind="{
-      ...user,
-      label: props.collapsed ? undefined : user?.name,
-      trailingIcon: props.collapsed ? undefined : 'i-lucide-chevrons-up-down'
-    }" color="neutral" variant="ghost" block :square="props.collapsed" class="data-[state=open]:bg-elevated" :ui="{
+  <UDropdownMenu
+    :items="items"
+    :content="{ align: contentAlign, collisionPadding: 12 }"
+    :ui="{
+      content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)',
+      itemLabel: 'text-start',
+      itemDescription: 'text-start'
+    }"
+  >
+    <UButton
+      v-bind="{
+        ...user,
+        label: props.collapsed ? undefined : user?.name,
+        trailingIcon: props.collapsed ? undefined : 'i-lucide-chevrons-up-down'
+      }"
+      color="neutral"
+      variant="ghost"
+      block
+      :square="props.collapsed"
+      class="data-[state=open]:bg-elevated"
+      :ui="{
         base: props.collapsed ? undefined : 'justify-between',
         label: 'text-start truncate',
         trailingIcon: 'text-dimmed shrink-0'
-      }" />
+      }"
+    />
 
-    <template #item-trailing="{ item, active }">
-      <UIcon v-if="item.children?.length" :name="isRtl ? 'i-lucide-chevron-left' : 'i-lucide-chevron-right'"
-        class="shrink-0 size-5" />
+    <template #item-trailing="{ item }">
+      <UIcon
+        v-if="item.children?.length"
+        :name="isRtl ? 'i-lucide-chevron-left' : 'i-lucide-chevron-right'"
+        class="shrink-0 size-5"
+      />
     </template>
 
     <template #chip-leading="{ item }">
       <div class="inline-flex items-center justify-center shrink-0 size-5 ltr:mr-2 rtl:ml-2">
-        <span class="rounded-full ring ring-bg bg-(--chip-light) dark:bg-(--chip-dark) size-2" :style="{
-          '--chip-light': `var(--color-${(item as any).chip}-500)`,
-          '--chip-dark': `var(--color-${(item as any).chip}-400)`
-        }" />
+        <span
+          class="rounded-full ring ring-bg bg-(--chip-light) dark:bg-(--chip-dark) size-2"
+          :style="{
+            '--chip-light': `var(--color-${(item as any).chip}-500)`,
+            '--chip-dark': `var(--color-${(item as any).chip}-400)`
+          }"
+        />
       </div>
     </template>
   </UDropdownMenu>
