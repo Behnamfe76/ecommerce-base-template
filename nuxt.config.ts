@@ -36,6 +36,34 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2024-07-11',
 
+  vite: {
+    plugins: [
+      {
+        name: 'ignore-tailwind-sourcemap-warning',
+        apply: 'build',
+        configResolved(config) {
+          const originalOnWarn = config.build.rollupOptions.onwarn
+
+          config.build.rollupOptions.onwarn = (warning, warn) => {
+            if (
+              warning.code === 'SOURCEMAP_BROKEN'
+              && warning.plugin === '@tailwindcss/vite:generate:build'
+            ) {
+              return
+            }
+
+            if (originalOnWarn) {
+              originalOnWarn(warning, warn)
+              return
+            }
+
+            warn(warning)
+          }
+        }
+      }
+    ]
+  },
+
   postcss: {
     plugins: {
       '@tailwindcss/postcss': {}
